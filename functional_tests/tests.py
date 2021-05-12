@@ -1,9 +1,9 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
-import unittest
 
-class NewVsitorTest(unittest.TestCase):
+class NewVsitorTest(LiveServerTestCase):
 
     def setUp(self):
         path_to_driver = "C:/Users/Utilisateur/chromedriver_win32/bin/chromedriver.exe"
@@ -22,7 +22,7 @@ class NewVsitorTest(unittest.TestCase):
         # Edith ouviu falar de uma nova aplicação online interessante
         # para lista de tarefas. Ela decide verificar a homepage
 
-        self.browser.get("http://localhost:8000")
+        self.browser.get(self.live_server_url)
 
         # Ela percebe que o título da página e o cabeçalho mencionam
         # listas de tarefas (to-do)
@@ -39,11 +39,11 @@ class NewVsitorTest(unittest.TestCase):
             'Enter a to-do item'
         )
 
-        # Ela digita "Buy peacock feathers" (Comprar penas de pavão)
+        # Ela digita "Buy peacock featers" (Comprar penas de pavão)
         # em uma nova caixa de texto (o hobby de Edith é fazer iscas
         # para pesca com fly)
 
-        inputbox.send_keys('Buy peacock feathers')
+        inputbox.send_keys('Buy peacock featers')
 
         # Quando ela tecla enter, a página é atualizada, e agora
         # a página lista "1 - Buy peacock feathers" como um item em 
@@ -51,7 +51,7 @@ class NewVsitorTest(unittest.TestCase):
 
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
-        self.check_for_row_in_list_table('1: Buy peacock feathers')
+        self.check_for_row_in_list_table('1: Buy peacock featers')
 
         # Ainda continua havendo uma caixa de texto convidando-a a 
         # acrescentar outro item. Ela insere "Use peacock feathers 
@@ -64,7 +64,7 @@ class NewVsitorTest(unittest.TestCase):
 
         # A página é atualizada novamente e agora mostra os dois
         # itens em sua lista
-        self.check_for_row_in_list_table('1: Buy peacock feathers')
+        self.check_for_row_in_list_table('1: Buy peacock featers')
         self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
 
         # Edith se pergunta se o site lembrará de sua lista. Então
@@ -76,6 +76,3 @@ class NewVsitorTest(unittest.TestCase):
         # Ela acessa essa URL -- sua lista de tarefas continua lá.
 
         # Satisfeita, ela volta a dormir
-
-if __name__ == '__main__':
-    unittest.main()
