@@ -9,10 +9,13 @@ Priority list implementation using **Django** and the **Test Driven Development*
   
 ## Command lines
 Execute the **unit tests**:  
-`python manage.py test` 
+`python manage.py test lists` 
 
 Execute the **functional tests**:  
 `python manage.py test functional_tests` 
+
+Execute the **all the tests**:  
+`python manage.py test` 
 
 Run the app on your localhost:  
 `python manage.py runserver`
