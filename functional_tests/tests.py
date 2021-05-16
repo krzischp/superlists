@@ -105,7 +105,71 @@ class NewVsitorTest(LiveServerTestCase):
         # ela nota que o site gerou um URL único para ela -- há um 
         # pequeno texto explicativo para isso.
 
-        self.fail('Finish the test!')
-
+        # self.fail('Finish the test!')
 
         # Ela acessa essa URL -- sua lista de tarefas continua lá.
+
+
+# O maior desafio de nossa história de usuário é lidar com as URLs distintas para cada novo usuário do nosso sistema. 
+# A necessidade é que tenhamos URLs únicas para cada usuário consultar a sua própria lista de tarefas.
+
+# folha de rascunho de itens que precisam ser resolvidos a fim de implementarmos a história de
+# usuário por completa:
+# - Ajustar o modelo para que itens sejam associados a listas distintas
+# - Adicionar URLs exclusivos para cada lista, por exemplo, como /lists/<identificador da lista>/
+# - Adicionar um URL para criar uma lista via POST, por exemplo, como /lists/new
+# - Adicionar URL para acrescentar um novo item em uma lista existente, por exemplo,  como /lists/<identificador da lista>/add_item
+
+# Antes de iniciarmos com as implementações, o primeiro passo é modificarmos nosso teste funcional, garantindo que tenhamos um 
+# mecanismo para detectar possíveis quebras no código.
+# Desse modo, o nosso teste funcional ficará conforme abaixo. Basicamente, alteramos o nome do método de teste anterior de 
+# test_can_start_a_list_and_retrieve_it_later para test_can_start_a_list_for_one_user e incluímos um novo método de teste 
+# para avaliar a característica de múltiplos usuários
+
+
+    def test_multiple_users_can_start_lists_at_different_urls(self):
+        # Edith inicia uma nova lista de tarefas
+        self.browser.get(self.live_server_url)
+        inputbox = self.browser.find_element_by_id('id_new_item_text')
+        inputbox.send_keys('Comprar anzol')
+        inputbox = self.browser.find_element_by_id('id_new_item_priority')
+        inputbox.send_keys("prioridade alta")
+        inputbox = self.browser.find_element_by_id('id_add_new_item')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1 - Comprar anzol - prioridade alta')
+
+        #Ela percebe que sua lista te um URL único
+        edith_list_url = self.browser.current_url
+        self.assertRegex(edith_list_url, '/lists/.+')
+
+        #Agora um novo usuário, Francis, chega ao site
+
+        ## Usamos uma nova versão do nagegador para garantir que nenhuma 
+        ## informação de Edith está vindo de cookies, etc
+        
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # Francis acessa a página inicial. Não há sinal da lista de Edith
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('make a fly', page_text)
+
+        # Francis inicia uma nova lista inserindo um novo item.
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1: Buy milk')
+
+        # Francis obtém seu próprio URL exclusivo
+        francis_list_url = self.browser.current_url
+        self.assertRegex(edith_list_url, '/lists/.+')
+        self.assertNotEqual( francis_list_url, edith_list_url)
+
+        # Novamente não há sinal algum da lista de Edith
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertIn('Buy milk', page_text)
+
+        # Fim
