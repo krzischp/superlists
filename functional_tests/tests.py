@@ -144,17 +144,20 @@ class NewVsitorTest(LiveServerTestCase):
 
         #Agora um novo usuário, Francis, chega ao site
 
-        ## Usamos uma nova versão do nagegador para garantir que nenhuma 
+        ## Usamos uma nova versão do navegador para garantir que nenhuma 
         ## informação de Edith está vindo de cookies, etc
         
         self.browser.quit()
-        self.browser = webdriver.Firefox()
+        path_to_driver = "C:/Users/Utilisateur/chromedriver_win32/bin/chromedriver.exe"
+        self.browser = webdriver.Chrome(path_to_driver)
 
         # Francis acessa a página inicial. Não há sinal da lista de Edith
         self.browser.get(self.live_server_url)
         page_text = self.browser.find_element_by_tag_name('body').text
-        self.assertNotIn('Buy peacock feathers', page_text)
-        self.assertNotIn('make a fly', page_text)
+        self.assertNotIn('Comprar anzol', page_text)
+        self.assertNotIn('Comprar cola instantâne', page_text)
+
+        self.fail('Finish the test!')
 
         # Francis inicia uma nova lista inserindo um novo item.
         inputbox = self.browser.find_element_by_id('id_new_item')
