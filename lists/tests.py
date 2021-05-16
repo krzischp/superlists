@@ -17,20 +17,19 @@ class HomePageTest(TestCase):
         self.client.get('/')
         self.assertEquals(Item.objects.count(), 0)
 
-    def test_can_save_a_POST_request(self):
-        self.client.post('/', data={'item_text': 'A new list item', 'item_priority': "prioridade baixa"})
 
+class NewListTest(TestCase):
+
+    def test_can_save_a_POST_request(self):
+        self.client.post('/lists/new', data={'item_text': 'A new list item', 'item_priority': "prioridade baixa"})
         self.assertEquals(Item.objects.count(), 1)
         new_item = Item.objects.first()
         self.assertEquals(new_item.text, 'A new list item')
         self.assertEquals(new_item.priority, "prioridade baixa")
 
-    # Vamos redigir o teste que verifique se estamos redirecionando após um POST e retornando a página principal
     def test_redirects_after_POST(self):
         response = self.client.post('/', data={'item_text': 'A new list item', 'item_priority': "prioridade baixa"})
-
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(response['location'], '/lists/the-only-list-in-the-world/')
+        self.assertRedirects(response, '/lists/the-only-list-in-the-world/')
 
 
 class ListViewTest(TestCase):
