@@ -18,4 +18,7 @@ Execute the **all the tests**:
 `python manage.py test` 
 
 Run the app on your localhost:  
-`python manage.py runserver`
+`python manage.py runserver`  
+  
+Run database migration:  
+`python manage.py makemigrations`
