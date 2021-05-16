@@ -157,13 +157,17 @@ class NewVsitorTest(LiveServerTestCase):
         self.assertNotIn('Comprar anzol', page_text)
         self.assertNotIn('Comprar cola instantâne', page_text)
 
-        self.fail('Finish the test!')
 
         # Francis inicia uma nova lista inserindo um novo item.
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        inputbox.send_keys('Buy milk')
+        inputbox = self.browser.find_element_by_id('id_new_item_text')
+        inputbox.send_keys('Comprar vodka')
+        inputbox = self.browser.find_element_by_id('id_new_item_priority')
+        inputbox.send_keys("prioridade alta")
+        inputbox = self.browser.find_element_by_id('id_add_new_item')
         inputbox.send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table('1: Buy milk')
+        self.wait_for_row_in_list_table('1 - Comprar vodka - prioridade alta')
+
+        self.fail('Finish the test!')
 
         # Francis obtém seu próprio URL exclusivo
         francis_list_url = self.browser.current_url

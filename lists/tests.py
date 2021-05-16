@@ -32,21 +32,6 @@ class HomePageTest(TestCase):
         self.assertEquals(response.status_code, 302)
         self.assertEquals(response['location'], '/lists/the-only-list-in-the-world/')
 
-    def test_displays_all_list_itens(self):
-        Item.objects.create(text='itemey 1', priority="prioridade baixa")
-        Item.objects.create(text='itemey 2', priority="prioridade média")
-        Item.objects.create(text='itemey 3', priority="prioridade alta")
-
-        response = self.client.get('/')
-
-        decoded_response = response.content.decode()
-        self.assertIn('itemey 1', decoded_response)
-        self.assertIn('prioridade baixa', decoded_response)
-        self.assertIn('itemey 2', decoded_response)
-        self.assertIn('prioridade média', decoded_response)
-        self.assertIn('itemey 3', decoded_response)
-        self.assertIn('prioridade alta', decoded_response)
-
 
 class ListViewTest(TestCase):
     def test_displays_all_list_itens(self):
@@ -62,6 +47,11 @@ class ListViewTest(TestCase):
         self.assertContains(response, 'prioridade baixa')
         self.assertContains(response, 'prioridade média')
         self.assertContains(response, 'prioridade alta')
+
+
+    def test_uses_list_template(self):
+        response = self.client.get('/lists/the-only-list-in-the-world/')
+        self.assertTemplateUsed(response, 'list.html')
 
 
 from lists.models import Item
