@@ -167,8 +167,6 @@ class NewVsitorTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table('1 - Comprar vodka - prioridade alta')
 
-        self.fail('Finish the test!')
-
         # Francis obtém seu próprio URL exclusivo
         francis_list_url = self.browser.current_url
         self.assertRegex(edith_list_url, '/lists/.+')
@@ -176,7 +174,7 @@ class NewVsitorTest(LiveServerTestCase):
 
         # Novamente não há sinal algum da lista de Edith
         page_text = self.browser.find_element_by_tag_name('body').text
-        self.assertNotIn('Buy peacock feathers', page_text)
-        self.assertIn('Buy milk', page_text)
+        self.assertNotIn('Comprar anzol', page_text)
+        self.assertIn('Comprar vodka', page_text)
 
         # Fim
